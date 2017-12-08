@@ -7,7 +7,7 @@ import threading
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #proses binding
-server_address = ('localhost', 13000)
+server_address = ('localhost', 14000)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
 sock.bind(server_address)
 
@@ -84,8 +84,8 @@ def layani_client(koneksi_client,alamat_client):
           respon = response_icon()
        elif (url=='/doc'):
 	  respon = response_dokumen()
-       elif (url=='/coba'):
-          respon = response_redirect()
+       elif (url=='/teks'):
+          respon = response_teks()
        else:
           respon = response_gambar()
 
