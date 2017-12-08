@@ -2,6 +2,7 @@
 import socket
 import sys
 import threading
+import os
 
 #inisialisasi
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,6 +22,25 @@ def response_teks():
 		"Content-Length: 7\r\n" \
 		"\r\n" \
 		"PROGJAR"
+	return hasil
+	
+def response_no1():
+	files = os.listdir(os.curdir)
+	
+	isi = ''
+	
+	for f in files:
+		isi += f
+		isi += "\n"
+	
+	panjang = len(isi)
+	
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/plain\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}".format(panjang, isi)
+	
 	return hasil
 
 def response_gambar():
@@ -86,6 +106,9 @@ def layani_client(koneksi_client,alamat_client):
 	  respon = response_dokumen()
        elif (url=='/teks'):
           respon = response_teks()
+       elif (url=='/1'):
+		  print 1
+		  respon = response_no1()
        else:
           respon = response_gambar()
 
