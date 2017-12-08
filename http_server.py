@@ -33,10 +33,12 @@ def response_no1():
 		isi += f
 		isi += "\n"
 	
+	isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
+	
 	panjang = len(isi)
 	
 	hasil = "HTTP/1.1 200 OK\r\n" \
-		"Content-Type: text/plain\r\n" \
+		"Content-Type: text/html\r\n" \
 		"Content-Length: {}\r\n" \
 		"\r\n" \
 		"{}".format(panjang, isi)
@@ -107,7 +109,6 @@ def layani_client(koneksi_client,alamat_client):
        elif (url=='/teks'):
           respon = response_teks()
        elif (url=='/1'):
-		  print 1
 		  respon = response_no1()
        else:
           respon = response_gambar()
