@@ -3,6 +3,8 @@ import socket
 import sys
 import threading
 
+
+#balba;a
 def response_teks():
 	hasil = "HTTP/1.1 200 OK\r\n" \
 		"Content-Type: text/plain\r\n" \
