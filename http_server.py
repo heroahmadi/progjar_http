@@ -33,8 +33,6 @@ def response_no1():
 		isi += f
 		isi += "\n"
 	
-	isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
-	
 	panjang = len(isi)
 	
 	hasil = "HTTP/1.1 200 OK\r\n" \
@@ -44,6 +42,20 @@ def response_no1():
 		"{}".format(panjang, isi)
 	
 	return hasil
+
+def response_no7():
+	isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
+	
+	panjang = len(isi)
+
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}".format(panjang, isi)
+	
+	return hasil
+	
 
 def response_gambar():
 	filegambar = open('gambar.png','r').read()
@@ -110,6 +122,8 @@ def layani_client(koneksi_client,alamat_client):
           respon = response_teks()
        elif (url=='/1'):
 		  respon = response_no1()
+       elif (url=='/7'):
+		  respon = response_no7()
        else:
           respon = response_gambar()
 
