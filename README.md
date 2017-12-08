@@ -25,5 +25,8 @@ Kelompok 5
   4. memindahkan direktori (nafi)
   5. memindahkan antar direktori (hero)
 
+
 minggu ke 16 uas, demoin ini 
 bikin laporan buat 3 tugas(ftp, chat server, file server), jobdesk per anggota dituliskan
+
+SEMANGAT
