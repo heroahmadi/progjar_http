@@ -23,26 +23,26 @@ def response_teks():
 		"\r\n" \
 		"PROGJAR"
 	return hasil
-	
+
 def response_no1():
 	files = os.listdir(os.curdir)
-	
+
 	isi = ''
-	
+
 	for f in files:
 		isi += f
 		isi += "\n"
-	
+
 	isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
-	
+
 	panjang = len(isi)
-	
+
 	hasil = "HTTP/1.1 200 OK\r\n" \
 		"Content-Type: text/html\r\n" \
 		"Content-Length: {}\r\n" \
 		"\r\n" \
 		"{}".format(panjang, isi)
-	
+
 	return hasil
 
 def response_gambar():
@@ -86,44 +86,44 @@ def response_redirect():
 
 #fungsi melayani client
 def layani_client(koneksi_client,alamat_client):
-    try:
-       print >>sys.stderr, 'ada koneksi dari ', alamat_client
-       request_message = ''
-       while True:
-           data = koneksi_client.recv(64)
-	   data = bytes.decode(data)
-           request_message = request_message+data
-	   if (request_message[-4:]=="\r\n\r\n"):
-		break
+	try:
+		print >>sys.stderr, 'ada koneksi dari ', alamat_client
+		request_message = ''
+		while True:
+			data = koneksi_client.recv(64)
+			data = bytes.decode(data)
+			request_message = request_message+data
+			if (request_message[-4:]=="\r\n\r\n"):
+				break
 
-       baris = request_message.split("\r\n")
-       baris_request = baris[0]
-       print baris_request
- 	
-       a,url,c = baris_request.split(" ")
-       
-       if (url=='/favicon.ico'):
-          respon = response_icon()
-       elif (url=='/doc'):
-	  respon = response_dokumen()
-       elif (url=='/teks'):
-          respon = response_teks()
-       elif (url=='/1'):
-		  respon = response_no1()
-       else:
-          respon = response_gambar()
+		baris = request_message.split("\r\n")
+		baris_request = baris[0]
+		print baris_request
 
-       koneksi_client.send(respon)
-    finally:
-        # Clean up the connection
-        koneksi_client.close()
+		a,url,c = baris_request.split(" ")
+
+		if (url=='/favicon.ico'):
+			respon = response_icon()
+		elif (url=='/doc'):
+			respon = response_dokumen()
+		elif (url=='/teks'):
+			respon = response_teks()
+		elif (url=='/1'):
+			respon = response_no1()
+		else:
+			respon = response_gambar()
+
+		koneksi_client.send(respon)
+	finally:
+		# Clean up the connection
+		koneksi_client.close()
 
 
 while True:
-    # Wait for a connection
-    print >>sys.stderr, 'waiting for a connection'
-    koneksi_client, alamat_client = sock.accept()
-    s = threading.Thread(target=layani_client, args=(koneksi_client,alamat_client))
-    s.start()
+	# Wait for a connection
+	print >>sys.stderr, 'waiting for a connection'
+	koneksi_client, alamat_client = sock.accept()
+	s = threading.Thread(target=layani_client, args=(koneksi_client,alamat_client))
+	s.start()
 
 
