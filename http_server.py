@@ -3,6 +3,7 @@ import socket
 import sys
 import threading
 import os
+import shutil
 
 #inisialisasi
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -44,6 +45,25 @@ def response_no1():
 		"{}".format(panjang, isi)
 
 	return hasil
+
+def response_no6():
+
+	mydir= ("<input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Masukkan Folder yang akan dihapus\" /> <input type=\"submit\" value=\"submit\"/> ")
+	panjang = len(mydir)
+
+	try:
+		shutil.rmtree(mydir)
+	except OSError, e:
+		print ("Error: %s - %s." % (e.filename,e.strerror))
+
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, mydir)
+	return hasil
+
+
 
 def response_gambar():
 	filegambar = open('gambar.png','r').read()
@@ -110,6 +130,8 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_teks()
 		elif (url=='/1'):
 			respon = response_no1()
+		elif (url=='/6'):
+			respon = response_no6()
 		else:
 			respon = response_gambar()
 
