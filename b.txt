@@ -1,0 +1,283 @@
+GET /2 HTTP/1.1
+Host: localhost
+Method Get
+:16153
+User-Agent: Mozilla/5.0 
+(X11; Ubuntu; Linux x86_64; rv:5
+7.0) Gecko/20100101 Firefox/57.0
+
+Accept: text/html,application/
+xhtml+xml,application/xml;q=0.9,
+*/*;q=0.8
+Accept-Language: en-U
+S,en;q=0.5
+Accept-Encoding: gzi
+p, deflate
+Connection: keep-ali
+ve
+Upgrade-Insecure-Requests: 1
+
+
+
+GET /2 HTTP/1.1
+GET /favicon.ico HTTP/1.1
+Host:
+Method Get
+ localhost:16153
+User-Agent: Mo
+zilla/5.0 (X11; Ubuntu; Linux x8
+6_64; rv:57.0) Gecko/20100101 Fi
+refox/57.0
+Accept: text/html,ap
+plication/xhtml+xml,application/
+xml;q=0.9,*/*;q=0.8
+Accept-Lang
+uage: en-US,en;q=0.5
+Accept-Enc
+oding: gzip, deflate
+Connection
+: keep-alive
+
+
+GET /favicon.ico HTTP/1.1
+POST /input HTTP/1.1
+Host: loca
+Method Post
+lhost:16153
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:16153/2
+Content-Type: multipart/form-data; boundary=---------------------------2064288247684592220338671788
+Content-Length: 2686
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+-----------------------------2064288247684592220338671788
+Content-Disposition: form-data; name="fileToUpload"; filename="catatan modul3"
+Content-Type: application/octet-stream
+
+catatan install dulu vlc-nox
+
+syntax pthread_create
+int pthread_create(pthread_t * thread,const pthread_attr_t * attr,void * (*start_routine)(void *),void *arg);
+
+catatan
+- thread - returns the thread id. (unsigned long int defined in bits/pthreadtypes.h)
+- attr   - Set to NULL if default thread attributes are used. (else define members of the struct 		 pthread_attr_t defined in bits/pthreadtypes.h) Attributes include:
+         * detached state (joinable? Default: PTHREAD_CREATE_JOINABLE. Other option: PTHREAD_CREATE_DETACHED)
+         * scheduling policy (real-time? PTHREAD_INHERIT_SCHED,PTHREAD_EXPLICIT_SCHED,SCHED_OTHER)
+         * scheduling parameter
+         * inheritsched attribute (Default: PTHREAD_EXPLICIT_SCHED Inherit from parent thread: PTHREAD_INHERIT_SCHED)
+         * scope (Kernel threads: PTHREAD_SCOPE_SYSTEM User threads: PTHREAD_SCOPE_PROCESS Pick one or the other not both.)
+         * guard size
+         * stack address (See unistd.h and bits/posix_opt.h _POSIX_THREAD_ATTR_STACKADDR)
+         * stack size (default minimum PTHREAD_STACK_SIZE set in pthread.h),
+- void * (*start_routine) - pointer to the function to be threaded. Function has a single argument: pointer to void.
+- *arg - pointer to argument of function. To pass multiple arguments, send a pointer to a structure.
+
+function pthread_join - wait for termination of another thread
+	int pthread_join(pthread_t th, voi
+d **thread_return);
+	catatan:
+	* th - thread suspended until the thread identified by th terminates, either by calling 	  pthread_exit() or by being cancelled.
+	* thread_return - If thread_return is not NULL, the return value of th is stored in the    		  location pointed to by thread_return.
+function pthread_exit - terminate the calling thread 
+	void pthread_exit(void *retval);
+	catatan retval - return values of pthread_exit()
+
+The threads library provides three synchronization mechanisms:
+1. mutexes - Mutual exclusion lock: Block access to variables by other threads. This enforces exclusive access by a thread to a variable or set of variables.
+2. joins - Make a thread wait till others are complete (terminated).
+3. condition variables - data type pthread_cond_t
+
+
+-----------------------------2064288247684592220338671788
+Content-Disposition: form-data; name="name_field"
+
+Default name for team.
+-----------------------------2064288247684592220338671788
+Content-Disposition: form-data; name="countryxsz"
+
+Norway
+-----------------------------2064288247684592220338671788--
+
+POST /input HTTP/1.1
+xxxx
+None
+FieldStorage(None, None, [])
+xxxx
+FieldStorage(None, None, [])
+GET /favicon.ico HTTP/1.1
+Host:
+Method Get
+ localhost:16153
+User-Agent: Mo
+zilla/5.0 (X11; Ubuntu; Linux x8
+6_64; rv:57.0) Gecko/20100101 Fi
+refox/57.0
+Accept: text/html,ap
+plication/xhtml+xml,application/
+xml;q=0.9,*/*;q=0.8
+Accept-Lang
+uage: en-US,en;q=0.5
+Accept-Enc
+oding: gzip, deflate
+Connection
+: keep-alive
+
+
+GET /favicon.ico HTTP/1.1
+GET /favicon.ico HTTP/1.1
+Host:
+Method Get
+ localhost:16153
+User-Agent: Mo
+zilla/5.0 (X11; Ubuntu; Linux x8
+6_64; rv:57.0) Gecko/20100101 Fi
+refox/57.0
+Accept: text/html,ap
+plication/xhtml+xml,application/
+xml;q=0.9,*/*;q=0.8
+Accept-Lang
+uage: en-US,en;q=0.5
+Accept-Enc
+oding: gzip, deflate
+Connection
+: keep-alive
+
+
+GET /favicon.ico HTTP/1.1
+GET /2 HTTP/1.1
+Host: localhost
+Method Get
+:16153
+User-Agent: Mozilla/5.0 
+(X11; Ubuntu; Linux x86_64; rv:5
+7.0) Gecko/20100101 Firefox/57.0
+
+Accept: text/html,application/
+xhtml+xml,application/xml;q=0.9,
+*/*;q=0.8
+Accept-Language: en-U
+S,en;q=0.5
+Accept-Encoding: gzi
+p, deflate
+Connection: keep-ali
+ve
+Upgrade-Insecure-Requests: 1
+
+Cache-Control: max-age=0
+
+
+GET /2 HTTP/1.1
+GET /favicon.ico HTTP/1.1
+Host:
+Method Get
+ localhost:16153
+User-Agent: Mo
+zilla/5.0 (X11; Ubuntu; Linux x8
+6_64; rv:57.0) Gecko/20100101 Fi
+refox/57.0
+Accept: text/html,ap
+plication/xhtml+xml,application/
+xml;q=0.9,*/*;q=0.8
+Accept-Lang
+uage: en-US,en;q=0.5
+Accept-Enc
+oding: gzip, deflate
+Connection
+: keep-alive
+
+
+GET /favicon.ico HTTP/1.1
+POST /input HTTP/1.1
+Host: loca
+Method Post
+lhost:16153
+User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://localhost:16153/2
+Content-Type: multipart/form-data; boundary=---------------------------1273482158986197212088789177
+Content-Length: 2686
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+
+-----------------------------1273482158986197212088789177
+Content-Disposition: form-data; name="fileToUpload"; filename="catatan modul3"
+Content-Type: application/octet-stream
+
+catatan install dulu vlc-nox
+
+syntax pthread_create
+int pthread_create(pthread_t * thread,const pthread_attr_t * attr,void * (*start_routine)(void *),void *arg);
+
+catatan
+- thread - returns the thread id. (unsigned long int defined in bits/pthreadtypes.h)
+- attr   - Set to NULL if default thread attributes are used. (else define members of the struct 		 pthread_attr_t defined in bits/pthreadtypes.h) Attributes include:
+         * detached state (joinable? Default: PTHREAD_CREATE_JOINABLE. Other option: PTHREAD_CREATE_DETACHED)
+         * scheduling policy (real-time? PTHREAD_INHERIT_SCHED,PTHREAD_EXPLICIT_SCHED,SCHED_OTHER)
+         * scheduling parameter
+         * inheritsched attribute (Default: PTHREAD_EXPLICIT_SCHED Inherit from parent thread: PTHREAD_INHERIT_SCHED)
+         * scope (Kernel threads: PTHREAD_SCOPE_SYSTEM User threads: PTHREAD_SCOPE_PROCESS Pick one or the other not both.)
+         * guard size
+         * stack address (See unistd.h and bits/posix_opt.h _POSIX_THREAD_ATTR_STACKADDR)
+         * stack size (default minimum PTHREAD_STACK_SIZE set in pthread.h),
+- void * (*start_routine) - pointer to the function to be threaded. Function has a single argument: pointer to void.
+- *arg - pointer to argument of function. To pass multiple arguments, send a pointer to a structure.
+
+function pthread_join - wait for termination of another thread
+	int pthread_join(pthread_t th, voi
+d **thread_return);
+	catatan:
+	* th - thread suspended until the thread identified by th terminates, either by calling 	  pthread_exit() or by being cancelled.
+	* thread_return - If thread_return is not NULL, the return value of th is stored in the    		  location pointed to by thread_return.
+function pthread_exit - terminate the calling thread 
+	void pthread_exit(void *retval);
+	catatan retval - return values of pthread_exit()
+
+The threads library provides three synchronization mechanisms:
+1. mutexes - Mutual exclusion lock: Block access to variables by other threads. This enforces exclusive access by a thread to a variable or set of variables.
+2. joins - Make a thread wait till others are complete (terminated).
+3. condition variables - data type pthread_cond_t
+
+
+-----------------------------1273482158986197212088789177
+Content-Disposition: form-data; name="name_field"
+
+Default name for team.
+-----------------------------1273482158986197212088789177
+Content-Disposition: form-data; name="countryxsz"
+
+Norway
+-----------------------------1273482158986197212088789177--
+
+POST /input HTTP/1.1
+xxxx
+None
+FieldStorage(None, None, [])
+xxxx
+FieldStorage(None, None, [])
+GET /favicon.ico HTTP/1.1
+Host:
+Method Get
+ localhost:16153
+User-Agent: Mo
+zilla/5.0 (X11; Ubuntu; Linux x8
+6_64; rv:57.0) Gecko/20100101 Fi
+refox/57.0
+Accept: text/html,ap
+plication/xhtml+xml,application/
+xml;q=0.9,*/*;q=0.8
+Accept-Lang
+uage: en-US,en;q=0.5
+Accept-Enc
+oding: gzip, deflate
+Connection
+: keep-alive
+
+
+GET /favicon.ico HTTP/1.1

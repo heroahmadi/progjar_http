@@ -1,15 +1,17 @@
-
+import datetime
+import codecs
 import socket
 import sys
 import threading
 import os
 import shutil
+import cgi, cgitb
 
 #inisialisasi
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #proses binding
-server_address = ('localhost', 14000)
+server_address = ('localhost', 19535)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
 sock.bind(server_address)
 
@@ -33,8 +35,8 @@ def response_no1():
 	for f in files:
 		isi += f
 		isi += "\n"
-
-	isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
+	#print isi
+	#isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
 
 	panjang = len(isi)
 
@@ -44,6 +46,59 @@ def response_no1():
 		"\r\n" \
 		"{}".format(panjang, isi)
 
+	return hasil
+
+def response_no2():
+	isi = "<form action=\"input\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\"><input type=\"hidden\" name=\"countryxsz\" value=\"Norway\"><input type=\"submit\" value=\"Submit\"></form>"
+
+	#isi = "<input type=\"text\" name=\"input\" placeholder=\"File\" />"
+
+	panjang = len(isi)
+	
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}".format(panjang, isi)
+
+	return hasil
+
+def response_input_no2(req):
+	#formData = cgi.FieldStorage()
+	#print formData
+	a,req=req.split("name=\"fileToUpload\"; ")
+	#req,a,c=req.split(" -----------------------------")
+	req=req.split("-----------------------------")	
+	b=req[0].split("Content-Type: ")
+	#get isi
+	x=b[1].split("\n\r")
+	print len(x)
+	print "menghilangkan content type"
+	print x
+	#menciptakan judul
+	now = datetime.datetime.now()
+	now = str(now)
+	now = now.replace(".","")
+	now = now.replace(" ","")
+	a=b[0].split("Content-Type: ")
+	flnm=a[0].split("filename=\"")
+	flnm=flnm=flnm[1].split("\"")
+	flnm=now+flnm[0]
+	print flnm
+	file = open(flnm,"w")
+	for xy in range(len(x)):
+		if xy!=0:
+			print "print"
+			file.write(x[xy])
+	file.close()
+	#b[1]isi file
+	msg="Sukses"
+	panjang = len(msg)
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}".format(panjang, msg)
 	return hasil
 
 def response_no6():
@@ -109,19 +164,34 @@ def layani_client(koneksi_client,alamat_client):
 	try:
 		print >>sys.stderr, 'ada koneksi dari ', alamat_client
 		request_message = ''
-		while True:
-			data = koneksi_client.recv(64)
-			data = bytes.decode(data)
-			request_message = request_message+data
-			if (request_message[-4:]=="\r\n\r\n"):
-				break
-
+		data = koneksi_client.recv(32)
+		data = bytes.decode(data)
+		print data
+		request_message = request_message+data
+		
+		if("GET" in data):
+			print "Method Get"
+			while True:
+				data = koneksi_client.recv(32)
+				data = bytes.decode(data)
+				print data
+				request_message = request_message+data
+				if (request_message[-4:]=="\r\n\r\n"):
+					break
+		elif("POST" in data):
+			print "Method Post"
+			while True:
+				data = koneksi_client.recv(4096)
+				request_message = request_message+data
+				if ("countryxsz" in data):
+					break
+		print "xxx"
+		print request_message
 		baris = request_message.split("\r\n")
 		baris_request = baris[0]
-		print baris_request
-
+		print baris_request		
 		a,url,c = baris_request.split(" ")
-
+		
 		if (url=='/favicon.ico'):
 			respon = response_icon()
 		elif (url=='/doc'):
@@ -130,6 +200,16 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_teks()
 		elif (url=='/1'):
 			respon = response_no1()
+		elif (url=='/2'):
+			respon = response_no2()
+		elif ("POST" in a and url=='/input'):
+			#formData = cgi.FieldStorage()
+			#name=formData.getvalue('name_field')
+			#print "xxxx"
+			#print name
+			#print formData
+			#print "xxxx"
+			respon = response_input_no2(request_message)
 		elif (url=='/6'):
 			respon = response_no6()
 		else:

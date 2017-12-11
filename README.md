@@ -16,7 +16,7 @@ Kelompok 5
 -membuat file server dengan cara protocol http 
 -client basic: 
   1. memperlihatkan daftar file yg ada, kek kalo di cmd pake dir 
-  2. meletakkan file (djohan)
+  2. meletakkan file(context type: txt) (djohan)
   3. mengambil file (alvin)
 -client advance:  
   1. menghapus file (yola)
