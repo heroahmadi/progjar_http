@@ -11,7 +11,11 @@ import cgi, cgitb
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #proses binding
-server_address = ('localhost', 11000)
+if len(sys.argv) == 1:
+	port = 10000
+else:
+	port = int(sys.argv[1])
+server_address = ('localhost', port)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
 sock.bind(server_address)
 
