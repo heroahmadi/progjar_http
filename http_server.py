@@ -61,8 +61,7 @@ def response_no1(url):
 		current += '/'
 	isi = '<h1>Current folder : /'+current+'</h1>'
 	isi += '<p>Folder Action :</p>'
-	isi += '<p><a href="/6">Hapus Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Move Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="/5?curdir='+current+'">Buat Folder</a></p>'
-	isi += '<p><a href="">Upload file disini</a></p>'
+	isi += '<p><a href="/6">Hapus Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="/5?curdir='+current+'">Buat Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="/2">Upload file disini</a></p>'
 	isi += '<hr>'
 	
 	for f in files:
