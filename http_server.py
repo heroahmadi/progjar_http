@@ -22,6 +22,12 @@ sock.bind(server_address)
 #listening
 sock.listen(1)
 
+def get_input(mydir):
+	mydir = mydir.split('Cookie')
+	mydir = mydir[1].split('input=')
+	mydir = mydir[1].split('&')[0]
+	
+	return mydir
 
 def response_teks():
 	hasil = "HTTP/1.1 200 OK\r\n" \
@@ -47,8 +53,12 @@ def response_no1(url):
 	else:
 		current = directory
 		current += '/'
-	isi = ''
-
+	isi = '<h1>Current folder : /'+current+'</h1>'
+	isi += '<p>Folder Action :</p>'
+	isi += '<p><a href="/6">Hapus Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Pindah Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Buat Folder</a></p>'
+	isi += '<p><a href="">Upload file disini</a></p>'
+	isi += '<hr>'
+	
 	for f in files:
 		isi += '<p><a href="/1?dir='+current+f+'">'+f+'</a></p>'
 
@@ -64,8 +74,6 @@ def response_no1(url):
 
 def response_no2():
 	isi = "<form action=\"input\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\"><input type=\"hidden\" name=\"countryxsz\" value=\"Norway\"><input type=\"submit\" value=\"Submit\"></form>"
-
-	#isi = "<input type=\"text\" name=\"input\" placeholder=\"File\" />"
 
 	panjang = len(isi)
 	
@@ -116,7 +124,38 @@ def response_input_no2(req):
 	return hasil
 
 def response_no6():
+	mydir= ("<form method=\"POST\" action=\"/hapusdir\"><input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Masukkan Folder yang akan dihapus\" /><input type=\"hidden\" name=\"countryxsz\" value=\"Norway\"><input type=\"submit\" value=\"submit\"/> ")
+	panjang = len(mydir)
 
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, mydir)
+	return hasil
+
+def hapus_dir(mydir):
+	mydir = get_input(mydir)
+	print 'DIREKTORIIIIIIIIIIIIIIIII', mydir
+	path = os.getcwd()
+	print path
+	try:
+		shutil.rmtree(path+'/'+mydir)
+		isi = 'Sukses'
+	except OSError, e:
+		print ("Error: %s - %s." % (e.filename,e.strerror))
+		isi = e.strerror
+
+	panjang = len(isi)
+	
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/plain\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, isi)
+	return hasil
+
+def response_no8():
 	mydir= ("<input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Masukkan Folder yang akan dihapus\" /> <input type=\"submit\" value=\"submit\"/> ")
 	panjang = len(mydir)
 
@@ -132,8 +171,6 @@ def response_no6():
 		"{}" . format(panjang, mydir)
 	return hasil
 	
-
-
 
 def response_gambar():
 	filegambar = open('gambar.png','r').read()
@@ -241,7 +278,7 @@ def layani_client(koneksi_client,alamat_client):
 		baris_request = baris[0]
 		print baris_request		
 		a,url,c = baris_request.split(" ")
-		#print url[:2]
+		print url
 		if (url=='/favicon.ico'):
 			respon = response_icon()
 		elif (url=='/doc'):
@@ -252,6 +289,11 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_no1(url)
 		elif (url=='/2'):
 			respon = response_no2()
+		elif (url=='/6'):
+			respon = response_no6()
+		elif ("POST" in a and url=='/hapusdir'):
+			print request_message
+			respon = hapus_dir(request_message)
 		elif ("POST" in a and url=='/input'):
 			#formData = cgi.FieldStorage()
 			#name=formData.getvalue('name_field')
@@ -262,6 +304,8 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_input_no2(request_message)
 		elif (url=='/6'):
 			respon = response_no6()
+		elif (url=='/8'):
+			respon = response_no8()
 		else:
 			respon = response_gambar()
 
