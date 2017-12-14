@@ -1,3 +1,16 @@
+"""Simple HTTP Server With Upload.
+
+This module builds on BaseHTTPServer by implementing the standard GET
+and HEAD requests in a fairly straightforward manner.
+
+"""
+
+
+__version__ = "0.1"
+__all__ = ["SimpleHTTPRequestHandler"]
+__author__ = "bones7456"
+__home_page__ = "http://li2z.cn/"
+
 import os
 import posixpath
 import BaseHTTPServer
@@ -6,8 +19,6 @@ import cgi
 import shutil
 import mimetypes
 import re
-import zipfile
-
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -15,14 +26,30 @@ except ImportError:
 
 
 class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+
+    """Simple HTTP request handler with GET/HEAD/POST commands.
+
+    This serves files from the current directory and any of its
+    subdirectories.  The MIME type for files is determined by
+    calling the .guess_type() method. And can reveive file uploaded
+    by client.
+
+    The GET/HEAD/POST requests are identical except that the HEAD
+    request omits the actual contents of the file.
+
+    """
+
+    server_version = "SimpleHTTPWithUpload/" + __version__
+
     def do_GET(self):
+        """Serve a GET request."""
         f = self.send_head()
         if f:
             self.copyfile(f, self.wfile)
             f.close()
 
     def do_HEAD(self):
-        
+        """Serve a HEAD request."""
         f = self.send_head()
         if f:
             f.close()
@@ -96,21 +123,20 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         return (False, "Unexpect Ends of data.")
 
     def send_head(self):
+        """Common code for GET and HEAD commands.
+
+        This sends the response code and MIME headers.
+
+        Return value is either a file object (which has to be copied
+        to the outputfile by the caller unless the command was HEAD,
+        and must be closed by the caller under all circumstances), or
+        None, in which case the caller has nothing further to do.
+
+        """
         path = self.translate_path(self.path)
         f = None
 	print path
-	if self.path.endswith('?download'):
-		tmp_file = "tmp.zip"
-        	self.path = self.path.replace("?download","")
-
-        	zip = zipfile.ZipFile(tmp_file, 'w')
-        	for root, dirs, files in os.walk(path):
-			for file in files:
-		                if os.path.join(root, file) != os.path.join(root, tmp_file):
-					zip.write(os.path.join(root, file))
-		zip.close()
-		path = self.translate_path(tmp_file)
-        elif os.path.isdir(path):
+        if os.path.isdir(path):
 	    print "Benar"
             if not self.path.endswith('/'):
                 # redirect browser - doing basically what apache does
@@ -143,7 +169,13 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         return f
 
     def list_directory(self, path):
-        
+        """Helper to produce a directory listing (absent index.html).
+
+        Return value is either a file object, or None (indicating an
+        error).  In either case, the headers are sent, making the
+        interface the same as for send_head().
+
+        """
         try:
             list = os.listdir(path)
         except os.error:
@@ -159,8 +191,6 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         f.write("<form ENCTYPE=\"multipart/form-data\" method=\"post\">")
         f.write("<input name=\"file\" type=\"file\"/>")
         f.write("<input type=\"submit\" value=\"upload\"/></form>\n")
-	f.write("<hr>\n")
-	f.write("<a href='%s'>%s</a>\n" % (self.path+"?download",'Download Directory Tree as Zip'))
         f.write("<hr>\n<ul>\n")
         for name in list:
             fullname = os.path.join(path, name)
@@ -184,6 +214,14 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         return f
 
     def translate_path(self, path):
+        """Translate a /-separated PATH to the local filename syntax.
+
+        Components that mean special things to the local file system
+        (e.g. drive or directory names) are ignored.  (XXX They should
+        probably be diagnosed.)
+
+        """
+        # abandon query parameters
         path = path.split('?',1)[0]
         path = path.split('#',1)[0]
         path = posixpath.normpath(urllib.unquote(path))
@@ -198,9 +236,36 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         return path
 
     def copyfile(self, source, outputfile):
+        """Copy all data between two file objects.
+
+        The SOURCE argument is a file object open for reading
+        (or anything with a read() method) and the DESTINATION
+        argument is a file object open for writing (or
+        anything with a write() method).
+
+        The only reason for overriding this would be to change
+        the block size or perhaps to replace newlines by CRLF
+        -- note however that this the default server uses this
+        to copy binary data as well.
+
+        """
         shutil.copyfileobj(source, outputfile)
 
     def guess_type(self, path):
+        """Guess the type of a file.
+
+        Argument is a PATH (a filename).
+
+        Return value is a string of the form type/subtype,
+        usable for a MIME Content-type header.
+
+        The default implementation looks the file's extension
+        up in the table self.extensions_map, using application/octet-stream
+        as a default; however it would be permissible (if
+        slow) to look inside the data to make a better guess.
+
+        """
+
         base, ext = posixpath.splitext(path)
         if ext in self.extensions_map:
             return self.extensions_map[ext]
@@ -221,9 +286,9 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         })
 
 
-def main(HandlerClass = SimpleHTTPRequestHandler,ServerClass = BaseHTTPServer.HTTPServer):
+def test(HandlerClass = SimpleHTTPRequestHandler,ServerClass = BaseHTTPServer.HTTPServer):
     BaseHTTPServer.test(HandlerClass, ServerClass)
 
 if __name__ == '__main__':
-    main()
+    test()
 
