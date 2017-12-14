@@ -62,10 +62,10 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 	else:
 		length = int(self.headers['content-length'])
                 postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-		if postvars['hapusdir'] is not None:
+		if postvars.get('hapusdir') is not None:
 			print "Hapus Directory"			
 			print postvars['hapusdir']
-		elif postvars['hapusfile'] is not None:
+		elif postvars.get('hapusfile') is not None:
 			print "Hapus File"			
 			print postvars['hapusfile']
 		
