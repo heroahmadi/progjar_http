@@ -72,7 +72,8 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 d=d.replace("]","")
                 d=d.replace("'","")
                 print d
-                s=s+"\\"+d
+                #s=s+"\\"+d#windows
+		s=s+"/"+d#linux
                 print s
                 os.rmdir(s)
                 print "Hapus Directory"
