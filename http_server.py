@@ -6,6 +6,8 @@ import threading
 import os
 import shutil
 import cgi, cgitb
+import urllib
+from mimetypes import MimeTypes
 
 #inisialisasi
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -69,6 +71,31 @@ def response_no1(url):
 		"Content-Length: {}\r\n" \
 		"\r\n" \
 		"{}".format(panjang, isi)
+
+	return hasildef 
+
+def response_telu():
+
+	isi = ''
+
+	for filename in os.listdir(os.curdir):
+		if (filename == "images.jpeg"):
+			# path = os.getcwd()+"/"+filename
+			mime = MimeTypes()
+			# mime_type = mime.guess_type("http_server.png")
+			url = urllib.pathname2url(filename)
+			mime_type = mime.guess_type(url)
+			ctype = mime_type[0]
+			break
+
+	file = open('images.jpeg','r').read()
+	panjang = len(file)
+
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: {}\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}".format(ctype, panjang, file)
 
 	return hasil
 
@@ -249,8 +276,10 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_dokumen()
 		elif (url=='/teks'):
 			respon = response_teks()
-		elif (url[:2]=='/1'):
-			respon = response_no1(url)
+		elif (url=='/1'):
+			respon = response_no1()
+		elif (url=='/3'):
+			respon = response_telu()
 		elif (url=='/2'):
 			respon = response_no2()
 		elif (url=='/6'):
