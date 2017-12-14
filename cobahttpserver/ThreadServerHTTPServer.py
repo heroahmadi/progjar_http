@@ -48,9 +48,7 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 f.write("<strong>Failed:</strong>")
             f.write(info)
             f.write("<br><a href=\"%s\">back</a>" % self.headers['referer'])
-            f.write("<hr><small>Powerd By: bones7456, check new version at ")
-            f.write("<a href=\"http://li2z.cn/?s=SimpleHTTPServerWithUpload\">")
-            f.write("here</a>.</small></body>\n</html>\n")
+            f.write("</body>\n</html>\n")
             length = f.tell()
             f.seek(0)
             self.send_response(200)
@@ -63,19 +61,23 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         else:
             length = int(self.headers['content-length'])
             postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+            f = StringIO()
+            f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
             if postvars.get('hapusdir') is not None:
+                f.write("<html>\n<title>Delete Result Page</title>\n")
+                f.write("<body>\n<h2>Delete Result Page</h2>\n")
                 s=os.getcwd()
                 d=postvars['hapusdir']
-
                 d=str(d)
                 d=d.replace("[","")
                 d=d.replace("]","")
                 d=d.replace("'","")
                 print d
-                #s=s+"\\"+d#windows
-		s=s+"/"+d#linux
+                s=s+"\\"+d#windows
+		        #s=s+"/"+d#linux
                 print s
-                os.rmdir(s)
+                shutil.rmtree(s)
+                #os.rmdir(s)
                 print "Hapus Directory"
                 print postvars['hapusdir']
 
@@ -83,6 +85,19 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
                 print "Hapus File"
                 print postvars['hapusfile']
 
+            f.write("<hr>\n")
+            f.write("<strong>SUKSES DELETE DIREKTORI :D</strong>")
+            f.write("<br><a href=\"%s\">back</a>" % self.headers['referer'])
+            f.write("</body>\n</html>\n")
+            length = f.tell()
+            f.seek(0)
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.send_header("Content-Length", str(length))
+            self.end_headers()
+            if f:
+                self.copyfile(f, self.wfile)
+                f.close()
 
     def deal_post_data(self):
         boundary = self.headers.plisttext.split("=")[1]
