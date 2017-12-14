@@ -7,7 +7,8 @@ import shutil
 import mimetypes
 import re
 import zipfile
-
+import cgitb
+cgitb.enable()
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -29,31 +30,45 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_POST(self):
         """Serve a POST request."""
-        r, info = self.deal_post_data()
-        print r, info, "by: ", self.client_address
-        f = StringIO()
-        f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
-        f.write("<html>\n<title>Upload Result Page</title>\n")
-        f.write("<body>\n<h2>Upload Result Page</h2>\n")
-        f.write("<hr>\n")
-        if r:
-            f.write("<strong>Success:</strong>")
-        else:
-            f.write("<strong>Failed:</strong>")
-        f.write(info)
-        f.write("<br><a href=\"%s\">back</a>" % self.headers['referer'])
-        f.write("<hr><small>Powerd By: bones7456, check new version at ")
-        f.write("<a href=\"http://li2z.cn/?s=SimpleHTTPServerWithUpload\">")
-        f.write("here</a>.</small></body>\n</html>\n")
-        length = f.tell()
-        f.seek(0)
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.send_header("Content-Length", str(length))
-        self.end_headers()
-        if f:
-            self.copyfile(f, self.wfile)
-            f.close()
+	ctype,pdict = cgi.parse_header(self.headers.getheader('Content-type'))
+        if ctype == 'multipart/form-data':
+		print "file"
+		#query = cgi.parse_multipart(self.rfile, pdict)
+	        r, info = self.deal_post_data()
+		print r, info, "by: ", self.client_address
+		f = StringIO()
+		f.write('<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">')
+		f.write("<html>\n<title>Upload Result Page</title>\n")
+		f.write("<body>\n<h2>Upload Result Page</h2>\n")
+		f.write("<hr>\n")
+		if r:
+		    f.write("<strong>Success:</strong>")
+		else:
+		    f.write("<strong>Failed:</strong>")
+		f.write(info)
+		f.write("<br><a href=\"%s\">back</a>" % self.headers['referer'])
+		f.write("<hr><small>Powerd By: bones7456, check new version at ")
+		f.write("<a href=\"http://li2z.cn/?s=SimpleHTTPServerWithUpload\">")
+		f.write("here</a>.</small></body>\n</html>\n")
+		length = f.tell()
+		f.seek(0)
+		self.send_response(200)
+		self.send_header("Content-type", "text/html")
+		self.send_header("Content-Length", str(length))
+		self.end_headers()
+		if f:
+		    self.copyfile(f, self.wfile)
+		    f.close()
+	else:
+		length = int(self.headers['content-length'])
+                postvars = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
+		if postvars['hapusdir'] is not None:
+			print "Hapus Directory"			
+			print postvars['hapusdir']
+		elif postvars['hapusfile'] is not None:
+			print "Hapus File"			
+			print postvars['hapusfile']
+		
         
     def deal_post_data(self):
         boundary = self.headers.plisttext.split("=")[1]
@@ -159,6 +174,16 @@ class SimpleHTTPRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         f.write("<form ENCTYPE=\"multipart/form-data\" method=\"post\">")
         f.write("<input name=\"file\" type=\"file\"/>")
         f.write("<input type=\"submit\" value=\"upload\"/></form>\n")
+	f.write("<hr>\n")
+	f.write("<h2>Hapus Directory</h2>")
+	f.write("<form method=\"post\">")
+	f.write("<input name=\"hapusdir\"/>")
+	f.write("</form>")
+	f.write("<hr>\n")
+	f.write("<h2>Hapus File</h2>")
+	f.write("<form method=\"post\">")
+	f.write("<input name=\"hapusfile\"/>")
+	f.write("</form>")
 	f.write("<hr>\n")
 	f.write("<a href='%s'>%s</a>\n" % (self.path+"?download",'Download Directory Tree as Zip'))
         f.write("<hr>\n<ul>\n")
