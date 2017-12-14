@@ -40,7 +40,6 @@ def response_teks():
 	return hasil
 
 def response_no1(url):
-	print 'URLNYAAAAAAAAAAAA : ', url
 	url = url.split('?dir=')
 	if len(url) == 1:
 		directory = os.curdir
@@ -62,7 +61,7 @@ def response_no1(url):
 		current += '/'
 	isi = '<h1>Current folder : /'+current+'</h1>'
 	isi += '<p>Folder Action :</p>'
-	isi += '<p><a href="/6">Hapus Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Pindah Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Buat Folder</a></p>'
+	isi += '<p><a href="/6">Hapus Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="">Move Folder</a>&nbsp&nbsp&nbsp&nbsp<a href="/5?curdir='+current+'">Buat Folder</a></p>'
 	isi += '<p><a href="">Upload file disini</a></p>'
 	isi += '<hr>'
 	
@@ -79,6 +78,37 @@ def response_no1(url):
 
 	return hasil
 
+def response_no5(url):
+	mydir = ("<form method=\"POST\" action=\"\"><input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Nama Folder\" /><input type=\"hidden\" name=\"countryxsz\" value=\"Norway\"><input type=\"submit\" value=\"submit\"/> ")
+	panjang = len(mydir)
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, mydir)
+	return hasil
+
+def buat_dir(url, data):
+	data = get_input(data)
+	url = url.split('?curdir=')
+	print "CURDIR MAMEEEEN", url[1]
+	print "DATA MAMEEEEN", data
+	
+	fullpath = os.getcwd() + '/' + url[1] + data
+	if not os.path.exists(fullpath):
+		os.makedirs(fullpath)
+		data = 'sukses'
+	else:
+		data = 'gagal'
+			
+	panjang = len(data)
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, data)
+	return hasil
+	
 def response_telu(namafile):
 
 	isi = ''
@@ -168,9 +198,7 @@ def response_no6():
 
 def hapus_dir(mydir):
 	mydir = get_input(mydir)
-	print 'DIREKTORIIIIIIIIIIIIIIIII', mydir
 	path = os.getcwd()
-	print path
 	try:
 		shutil.rmtree(path+'/'+mydir)
 		isi = 'Sukses'
@@ -240,8 +268,6 @@ def response_redirect():
 	return hasil
 
 
-
-
 #fungsi melayani client
 def layani_client(koneksi_client,alamat_client):
 	try:
@@ -289,8 +315,11 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_no2()
 		elif (url=='/6'):
 			respon = response_no6()
+		elif ("POST" in a and url[:2]=='/5'):
+			respon = buat_dir(url, request_message)
+		elif (url[:2]=='/5'):
+			respon = response_no5(url)
 		elif ("POST" in a and url=='/hapusdir'):
-			print request_message
 			respon = hapus_dir(request_message)
 		elif ("POST" in a and url=='/input'):
 			#formData = cgi.FieldStorage()
