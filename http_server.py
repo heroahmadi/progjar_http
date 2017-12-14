@@ -66,7 +66,8 @@ def response_no1(url):
 	isi += '<hr>'
 	
 	for f in files:
-		isi += '<p><a href="/1?dir='+current+f+'">'+f+'</a></p>'
+		isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
+		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/></form></div>'
 
 	panjang = len(isi)
 
@@ -196,6 +197,16 @@ def response_no6():
 		"{}" . format(panjang, mydir)
 	return hasil
 
+def response_no7(url):
+	mydir = ("<form method=\"POST\" action=\"\"><input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Folder Tujuan\" /><input type=\"hidden\" name=\"countryxsz\" value=\"Norway\"><input type=\"submit\" value=\"submit\"/> ")
+	panjang = len(mydir)
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, mydir)
+	return hasil
+
 def hapus_dir(mydir):
 	mydir = get_input(mydir)
 	path = os.getcwd()
@@ -214,6 +225,28 @@ def hapus_dir(mydir):
 		"\r\n" \
 		"{}" . format(panjang, isi)
 	return hasil
+	
+def pindah(url, data):
+	dest = get_input(data)
+	thefile = url.split('?file=')[1]
+	
+	if os.path.isfile(thefile):
+		dest = os.getcwd() + '/' + urllib.unquote(dest).decode('utf8')
+		os.rename(thefile, dest)
+	elif os.path.isdir(thefile):
+		dest = os.getcwd() + '/' + urllib.unquote(dest).decode('utf8') + '/'
+		shutil.move(thefile, dest)
+	
+	data = 'sukses'
+	
+	panjang = len(data)
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/html\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, data)
+	return hasil
+	
 
 def response_no8():
 	mydir= ("<input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Masukkan Folder yang akan dihapus\" /> <input type=\"submit\" value=\"submit\"/> ")
@@ -315,6 +348,10 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_no2()
 		elif (url=='/6'):
 			respon = response_no6()
+		elif ("POST" in a and url[:2]=='/7'):
+			respon = pindah(url, request_message)
+		elif (url[:2]=='/7'):
+			respon = response_no7(url)
 		elif ("POST" in a and url[:2]=='/5'):
 			respon = buat_dir(url, request_message)
 		elif (url[:2]=='/5'):
