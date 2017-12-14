@@ -10,6 +10,8 @@ Kelompok 5
     Alvin Mudhoffar 5115100062
     Djohan Prabowo 5115100067
 
+[Run Dengan Custom Port]
+    python http_server.py [port]
 
 [TUGAS FILE SERVER] 
 
