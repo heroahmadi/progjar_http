@@ -11,7 +11,7 @@ import cgi, cgitb
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #proses binding
-server_address = ('localhost', 19535)
+server_address = ('localhost', 11000)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
 sock.bind(server_address)
 
@@ -27,16 +27,26 @@ def response_teks():
 		"PROGJAR"
 	return hasil
 
-def response_no1():
-	files = os.listdir(os.curdir)
-
+def response_no1(url):
+	url = url.split('?dir=')
+	if len(url) == 1:
+		directory = os.curdir
+	else:
+		if url[1] == '':
+			directory = os.curdir
+		else:
+			directory = url[1]
+	
+	files = os.listdir(directory)
+	if directory == '.':
+		current = ''
+	else:
+		current = directory
+		current += '/'
 	isi = ''
 
 	for f in files:
-		isi += f
-		isi += "\n"
-	#print isi
-	#isi = "<input type=\"text\" name=\"input\" placeholder=\"Masukkan Folder yang akan dipindah\" />"
+		isi += '<p><a href="/1?dir='+current+f+'">'+f+'</a></p>'
 
 	panjang = len(isi)
 
@@ -185,21 +195,21 @@ def layani_client(koneksi_client,alamat_client):
 				request_message = request_message+data
 				if ("countryxsz" in data):
 					break
-		print "xxx"
+		
 		print request_message
 		baris = request_message.split("\r\n")
 		baris_request = baris[0]
 		print baris_request		
 		a,url,c = baris_request.split(" ")
-		
+		#print url[:2]
 		if (url=='/favicon.ico'):
 			respon = response_icon()
 		elif (url=='/doc'):
 			respon = response_dokumen()
 		elif (url=='/teks'):
 			respon = response_teks()
-		elif (url=='/1'):
-			respon = response_no1()
+		elif (url[:2]=='/1'):
+			respon = response_no1(url)
 		elif (url=='/2'):
 			respon = response_no2()
 		elif ("POST" in a and url=='/input'):
