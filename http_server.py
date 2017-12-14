@@ -40,6 +40,7 @@ def response_teks():
 	return hasil
 
 def response_no1(url):
+	print 'URLNYAAAAAAAAAAAA : ', url
 	url = url.split('?dir=')
 	if len(url) == 1:
 		directory = os.curdir
@@ -48,6 +49,10 @@ def response_no1(url):
 			directory = os.curdir
 		else:
 			directory = url[1]
+	
+	fullpath = os.getcwd() + '/' + directory
+	if os.path.isfile(fullpath):
+		return response_telu(directory)
 	
 	files = os.listdir(directory)
 	if directory == '.':
@@ -72,14 +77,14 @@ def response_no1(url):
 		"\r\n" \
 		"{}".format(panjang, isi)
 
-	return hasildef 
+	return hasil
 
-def response_telu():
+def response_telu(namafile):
 
 	isi = ''
 
 	for filename in os.listdir(os.curdir):
-		if (filename == "images.jpeg"):
+		if (filename == namafile):
 			# path = os.getcwd()+"/"+filename
 			mime = MimeTypes()
 			# mime_type = mime.guess_type("http_server.png")
@@ -88,7 +93,7 @@ def response_telu():
 			ctype = mime_type[0]
 			break
 
-	file = open('images.jpeg','r').read()
+	file = open(namafile,'r').read()
 	panjang = len(file)
 
 	hasil = "HTTP/1.1 200 OK\r\n" \
@@ -276,8 +281,8 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_dokumen()
 		elif (url=='/teks'):
 			respon = response_teks()
-		elif (url=='/1'):
-			respon = response_no1()
+		elif (url[:2]=='/1'):
+			respon = response_no1(url)
 		elif (url=='/3'):
 			respon = response_telu()
 		elif (url=='/2'):
