@@ -31,14 +31,6 @@ def get_input(mydir):
 	
 	return mydir
 
-def response_teks():
-	hasil = "HTTP/1.1 200 OK\r\n" \
-		"Content-Type: text/plain\r\n" \
-		"Content-Length: 7\r\n" \
-		"\r\n" \
-		"PROGJAR"
-	return hasil
-
 def response_no1(url):
 	url = url.split('?dir=')
 	if len(url) == 1:
@@ -266,7 +258,7 @@ def pindah(url, data):
 		"{}" . format(panjang, data)
 	return hasil
 	
-
+"""
 def response_no8():
 	mydir= ("<input type=\"text\" name=\"input\" id=\"folder\" placeholder=\"Masukkan Folder yang akan dihapus\" /> <input type=\"submit\" value=\"submit\"/> ")
 	panjang = len(mydir)
@@ -282,7 +274,7 @@ def response_no8():
 		"\r\n" \
 		"{}" . format(panjang, mydir)
 	return hasil
-	
+"""
 
 def response_gambar():
 	filegambar = open('gambar.png','r').read()
