@@ -50,6 +50,8 @@ def response_no1(url):
 			directory = url[1]
 	
 	fullpath = os.getcwd() + '/' + directory
+	fullpath = fullpath.replace('/.', '')
+	
 	if os.path.isfile(fullpath):
 		return response_telu(directory)
 	
@@ -66,7 +68,7 @@ def response_no1(url):
 	
 	for f in files:
 		isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
-		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/></form></div>'
+		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form></div>'
 
 	panjang = len(isi)
 
@@ -225,6 +227,24 @@ def hapus_dir(mydir):
 		"{}" . format(panjang, isi)
 	return hasil
 	
+def hapus_file(filepath):
+	filepath = filepath.split('?file=')[1]
+	try:
+		os.remove(filepath)
+		isi = 'Sukses'
+	except OSError, e:
+		print ("Error: %s - %s." % (e.filename,e.strerror))
+		isi = e.strerror
+
+	panjang = len(isi)
+	
+	hasil = "HTTP/1.1 200 OK\r\n" \
+		"Content-Type: text/plain\r\n" \
+		"Content-Length: {}\r\n" \
+		"\r\n" \
+		"{}" . format(panjang, isi)
+	return hasil
+
 def pindah(url, data):
 	dest = get_input(data)
 	thefile = url.split('?file=')[1]
@@ -351,6 +371,8 @@ def layani_client(koneksi_client,alamat_client):
 			respon = pindah(url, request_message)
 		elif (url[:2]=='/7'):
 			respon = response_no7(url)
+		elif (url[:2]=='/4'):
+			respon = hapus_file(url)
 		elif ("POST" in a and url[:2]=='/5'):
 			respon = buat_dir(url, request_message)
 		elif (url[:2]=='/5'):
