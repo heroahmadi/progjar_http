@@ -1,3 +1,0 @@
-python Namafile.py PORT
-
-python ThreadServerHttp.py 4000
