@@ -60,7 +60,7 @@ def response_no1(url):
 	
 	for f in files:
 		isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
-		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form></div>'
+		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form><a href="/downlz/'+f+'"><button>Download</button></a></div>'
 
 	panjang = len(isi)
 
@@ -306,7 +306,14 @@ def response_redirect():
 		"Location: {}\r\n" \
 		"\r\n"  . format('http://www.its.ac.id')
 	return hasil
-
+def response_download(nama_file):
+	print "oke"
+	isi_file = open(str(nama_file), "rb").read()
+	hasil="HTTP/1.1 200 OK\r\n" \
+	      "Content-Type: application/force-download\r\n" \
+	      "Content-Length: {}\r\n\r\n" \
+	      "{}" . format(len(isi_file), isi_file)
+	return hasil
 
 #fungsi melayani client
 def layani_client(koneksi_client,alamat_client):
@@ -339,9 +346,9 @@ def layani_client(koneksi_client,alamat_client):
 		#print request_message
 		baris = request_message.split("\r\n")
 		baris_request = baris[0]
-		print baris_request		
+		#print baris_request		
 		a,url,c = baris_request.split(" ")
-		print url
+		#print url
 		if (url=='/favicon.ico'):
 			respon = response_icon()
 		elif (url=='/doc'):
@@ -381,6 +388,10 @@ def layani_client(koneksi_client,alamat_client):
 			respon = response_no6()
 		elif (url=='/8'):
 			respon = response_no8()
+		elif ('/downlz/' in url):
+			msg=url.replace("/downlz/","")
+			print msg
+			respon = response_download(msg)
 		else:
 			respon = response_gambar()
 
