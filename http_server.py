@@ -59,8 +59,12 @@ def response_no1(url):
 	isi += '<hr>'
 	
 	for f in files:
-		isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
-		isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form><a href="/downlz/'+f+'"><button>Download</button></a></div>'
+		if os.path.isfile(f):
+			isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
+			isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form><a href="/downlz/'+f+'"><button>Download</button></a></div>'
+		else:
+			isi += '<div><a href="/1?dir='+current+f+'">'+f+'</a>&nbsp&nbsp&nbsp&nbsp'
+			isi += '<form><input type="button" value="Pindah" onclick="window.location.href=\'/7?file='+fullpath+'/'+f+'\'"/><input type="button" value="Hapus" onclick="window.location.href=\'/4?file='+fullpath+'/'+f+'\'"/></form></div>'	
 
 	panjang = len(isi)
 
