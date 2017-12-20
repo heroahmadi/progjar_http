@@ -160,6 +160,8 @@ def response_input_no2(req):
 	isi=isi[0]
 	print isi
 	print "=======================Akhir debug=================="
+	flnm=str(flnm)
+	flnm.replace(" ","")
 	now = datetime.datetime.now()
 	now = str(now)
 	now = now.replace(".","")
